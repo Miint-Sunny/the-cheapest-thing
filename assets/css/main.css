@@ -545,15 +545,17 @@ img, svg, canvas { display: block; max-width: 100%; }
   font-weight: 500;
 }
 
-.fold {
+/* the dashed fold line, inserted above the visitor's row after move 3 */
+.fold-row {
+  display: block;
   position: relative;
   border-top: 2px dashed var(--mute);
-  margin: 0.1rem -1.1rem 0.5rem;
+  margin: 0.4rem -1.1rem;
 }
 .fold-label {
   position: absolute;
   right: 0.6rem;
-  top: -0.7rem;
+  top: -0.72rem;
   font-size: 0.6rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
