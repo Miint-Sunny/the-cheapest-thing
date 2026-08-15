@@ -632,7 +632,13 @@ img, svg, canvas { display: block; max-width: 100%; }
 .act:hover:not(:disabled) { background: var(--paper); }
 .act:disabled { opacity: 0.38; cursor: default; text-decoration: line-through; }
 
-.serp-hint { margin-top: 0.8rem; font-size: var(--fs-small); color: var(--tx2); }
+.serp-hint {
+  margin-bottom: 0.7rem;
+  font-size: var(--fs-small);
+  color: var(--tx2);
+}
+.serp-hint::after { content: ' \2193'; }
+.act-beckon { animation: breathe 2.6s ease-in-out 1.4s infinite; }
 
 .serp-counter {
   margin-top: 1rem;

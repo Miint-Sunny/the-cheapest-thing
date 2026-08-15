@@ -11,9 +11,13 @@
    interchangeable machine-made content, and the visitor's site is the
    only row with words.
 
-   No-interaction path (§5): a subtle hint at 10 s, auto-play of the three
-   moves at 18 s, 1.2 s apart. SCREENS.s3.complete() lets screen 4 fast-
-   forward the state if the visitor scrolls on before finishing. */
+   Guidance: the "Try one." hint shows immediately above the buttons, the
+   buttons cascade in on entry, and the first one breathes — the same
+   press-me language as screen 0's Generate button. (The spec's 10 s hint
+   proved too late in first-viewer testing; the author asked for instant
+   guidance.) Auto-play still runs the three moves at 18 s, 1.2 s apart.
+   SCREENS.s3.complete() lets screen 4 fast-forward the state if the
+   visitor scrolls on before finishing. */
 (function () {
   'use strict';
   window.SCREENS = window.SCREENS || {};
@@ -37,7 +41,7 @@
 
   let ctx, root, listEl, sideEl;
   let skelEls = [], ellipsisEl = null, youEl = null, foldEl = null, rankNumEl = null;
-  let hintTimer = 0, autoTimer = 0, autoInterval = 0;
+  let autoTimer = 0, autoInterval = 0;
 
   function rank() {
     return RANKS[state.moves.length];
@@ -177,16 +181,17 @@
   }
 
   function clearTimers() {
-    clearTimeout(hintTimer);
     clearTimeout(autoTimer);
     clearInterval(autoInterval);
-    hintTimer = autoTimer = autoInterval = 0;
+    autoTimer = autoInterval = 0;
   }
 
   function applyMove(kind, animate) {
     if (state.moves.length >= 3 || state.moves.indexOf(kind) !== -1) return;
     state.moves.push(kind);
 
+    const first = root.querySelector('.serp-actions .act');
+    if (first) first.classList.remove('act-beckon');
     const btn = root.querySelector('.act[data-move="' + kind + '"]');
     if (btn) btn.disabled = true;
 
@@ -249,9 +254,22 @@
 
     enter() {
       if (state.moves.length) return;
-      hintTimer = setTimeout(function () {
-        if (!state.moves.length) root.querySelector('.serp-hint').hidden = false;
-      }, 10000);
+
+      /* first-time visitors must know the next step at once: the hint shows
+         immediately above the buttons, the buttons cascade in, and the first
+         one breathes — the same "press me" language as screen 0's Generate */
+      const hint = root.querySelector('.serp-hint');
+      hint.hidden = false;
+      hint.animate({ opacity: [0, 1] }, { duration: 500, delay: 900, easing: 'ease-out', fill: 'backwards' });
+      const acts = root.querySelectorAll('.serp-actions .act');
+      Array.prototype.forEach.call(acts, function (b, i) {
+        b.animate(
+          { opacity: [0, 1], transform: ['translateY(10px)', 'translateY(0)'] },
+          { duration: 500, delay: 350 + i * 130, easing: 'cubic-bezier(0.16, 1, 0.3, 1)', fill: 'backwards' }
+        );
+      });
+      if (acts[0]) acts[0].classList.add('act-beckon');
+
       autoTimer = setTimeout(function () {
         if (!state.moves.length) autoplay();
       }, 18000);
