@@ -6,69 +6,53 @@
    shows what was actually given up. After the third move the row sits at
    rank 12 with a dashed fold line above it — still below the fold.
 
-   The five "plausible result rows" are deliberately grey skeleton rows,
-   not fake text: grey bars are this page's visual language for
-   interchangeable machine-made content, and the visitor's site is the
-   only row with words.
+   The five other results are deliberately interchangeable listicle slop
+   (strings in copy.js, flagged as added keys). The visitor's row shows its
+   own description straight from the diff copy — after "add keywords" the
+   row's text visibly becomes the optimised version.
 
    Guidance: the "Try one." hint shows immediately above the buttons, the
    buttons cascade in on entry, and the first one breathes — the same
-   press-me language as screen 0's Generate button. (The spec's 10 s hint
-   proved too late in first-viewer testing; the author asked for instant
-   guidance.) Auto-play still runs the three moves at 18 s, 1.2 s apart.
-   SCREENS.s3.complete() lets screen 4 fast-forward the state if the
-   visitor scrolls on before finishing. */
+   press-me language as screen 0's Generate button. Auto-play still runs
+   the three moves at 18 s, 1.2 s apart. SCREENS.s3.complete() lets screen
+   4 fast-forward the state if the visitor scrolls on before finishing. */
 (function () {
   'use strict';
   window.SCREENS = window.SCREENS || {};
 
-  /* fixed "random" widths for the five skeleton results (title, url, snippet) */
-  const SKEL_ROWS = [
-    [62, 30, 88],
-    [48, 26, 74],
-    [70, 34, 81],
-    [55, 22, 90],
-    [66, 28, 68],
-  ];
-
   const RANKS = [847, 312, 89, 12];
-  /* where the visitor's row sits after n moves, among [s1..s5, ellipsis, you] */
   const MOVE_ORDER = ['keywords', 'title', 'social'];
 
   const state = {
     moves: [], // move ids in click order
   };
 
-  let ctx, root, listEl, sideEl;
-  let skelEls = [], ellipsisEl = null, youEl = null, foldEl = null, rankNumEl = null;
+  let ctx, root, listEl;
+  let resEls = [], ellipsisEl = null, youEl = null, foldEl = null, rankNumEl = null, youDescEl = null;
   let autoTimer = 0, autoInterval = 0;
 
   function rank() {
     return RANKS[state.moves.length];
   }
 
-  function skelRow(widths) {
-    const li = ctx.el('li', 'row');
+  function resultRow() {
+    const li = ctx.el('li', 'row row-res');
     li.setAttribute('aria-hidden', 'true');
-    const lines = ctx.el('span', 'row-lines');
-    ['skel skel-title', 'skel', 'skel'].forEach(function (cls, i) {
-      const bar = ctx.el('i', cls);
-      bar.style.width = widths[i] + '%';
-      lines.append(bar);
-    });
-    li.append(ctx.el('span', 'row-fav skel'), lines);
+    const main = ctx.el('span', 'res-main');
+    main.append(ctx.el('span', 'res-url mono'), ctx.el('span', 'res-title'), ctx.el('span', 'res-snip'));
+    li.append(ctx.el('span', 'row-fav skel'), main);
     return li;
   }
 
   function makeParts() {
-    skelEls = SKEL_ROWS.map(skelRow);
+    resEls = ctx.t('s3.results').map(resultRow);
     ellipsisEl = ctx.el('li', 'row-ellipsis', '· · ·');
     ellipsisEl.setAttribute('aria-hidden', 'true');
 
     youEl = ctx.el('li', 'row row-you');
     youEl.id = 'row-you';
     const main = ctx.el('span', 'row-main');
-    main.append(ctx.el('span', 'row-title'), ctx.el('i', 'row-sub skel'));
+    main.append(ctx.el('span', 'row-title'), (youDescEl = ctx.el('span', 'row-desc')));
     const rankWrap = ctx.el('span', 'row-rank mono');
     rankWrap.append(ctx.el('span', 'rank-label'), document.createTextNode(' '), (rankNumEl = ctx.el('b', 'rank-num')));
     youEl.append(ctx.el('span', 'row-fav skel'), main, rankWrap);
@@ -79,7 +63,7 @@
 
   /* list order for a given number of completed moves */
   function orderFor(n) {
-    const s = skelEls;
+    const s = resEls;
     if (n === 0) return [s[0], s[1], s[2], s[3], s[4], ellipsisEl, youEl];
     if (n === 1) return [s[0], s[1], s[2], s[3], ellipsisEl, youEl, s[4]];
     if (n === 2) return [s[0], s[1], ellipsisEl, youEl, s[2], s[3], s[4]];
@@ -87,10 +71,24 @@
   }
 
   function relabelParts() {
+    const data = ctx.t('s3.results');
+    resEls.forEach(function (li, i) {
+      li.querySelector('.res-url').textContent = data[i].url;
+      li.querySelector('.res-title').textContent = data[i].title;
+      li.querySelector('.res-snip').textContent = data[i].snippet;
+    });
     youEl.querySelector('.row-title').textContent = ctx.t('s3.yourSite');
     youEl.querySelector('.rank-label').textContent = ctx.t('s3.rankLabel');
     foldEl.querySelector('.fold-label').textContent = ctx.t('s3.foldLabel');
     rankNumEl.textContent = String(rank());
+    updateYouDesc();
+  }
+
+  /* the visitor's row describes itself with the diff copy — optimising the
+     description visibly rewrites the row */
+  function updateYouDesc() {
+    const d = ctx.t('s3.diff').description;
+    youDescEl.textContent = state.moves.indexOf('keywords') !== -1 ? d.after : d.before;
   }
 
   function renderList(animate) {
@@ -196,6 +194,7 @@
     if (btn) btn.disabled = true;
 
     renderList(animate);
+    updateYouDesc();
     if (animate) animateRankTo(rank());
     else rankNumEl.textContent = String(rank());
 
@@ -235,7 +234,6 @@
       ctx = c;
       root = document.getElementById('s3');
       listEl = root.querySelector('.serp-list');
-      sideEl = root.querySelector('.serp-side');
       makeParts();
       renderList(false);
       renderDiffs();

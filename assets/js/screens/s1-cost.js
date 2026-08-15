@@ -1,6 +1,8 @@
 /* s1-cost.js — screen 1: "What that cost in 2005" (BUILD-SPEC §6, screen 1).
    Three bars, drawn to scale, NOT log-scaled: full width / ~14% / a 2px
-   sliver. The sliver is the visitor's own cost, so it takes --signal. */
+   sliver. The sliver is the visitor's own cost, so it takes --signal.
+   The page generated on screen 0 stays as this screen's backdrop: a
+   barely-there clone sits behind the bars. */
 (function () {
   'use strict';
   window.SCREENS = window.SCREENS || {};
@@ -23,6 +25,14 @@
       row.append(meta, track);
       host.append(row);
     });
+  }
+
+  function fillGhost() {
+    const ghost = root.querySelector('.s1-ghost');
+    const mock = document.querySelector('#s0 .mock-page');
+    if (!ghost || !mock || ghost.dataset.filled) return;
+    ghost.dataset.filled = '1';
+    ghost.append(mock.cloneNode(true));
   }
 
   function reveal() {
@@ -51,14 +61,18 @@
     },
     relabel() {
       renderBars();
+      const gh = root.querySelector('.s1-ghost .mock-headline');
+      if (gh) gh.textContent = ctx.t('s0.mockHeadline');
     },
     enter() {
+      fillGhost();
       reveal();
     },
     leave() {},
     showFinalState() {
       revealed = true;
       renderBars();
+      fillGhost();
     },
   };
 })();

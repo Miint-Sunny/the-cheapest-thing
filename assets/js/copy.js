@@ -10,9 +10,13 @@
  * Build notes (code-level, no copy changed):
  * - Loaded as a classic script (`export` removed) so the page also runs over
  *   file://, where browsers block ES-module loading. Everything else is verbatim.
- * - One key was ADDED, flagged per spec §8: s0.mockHeadline (the generation
- *   sequence needs the headline block to "become real text"). It restates the
- *   prompt; no other copy was invented.
+ * - Keys ADDED, flagged per spec §8:
+ *   · s0.mockHeadline — the generation sequence needs the headline block to
+ *     "become real text". It restates the prompt.
+ *   · s3.results — the five "plausible result rows" (author's choice, review
+ *     round 3: real slop text instead of skeleton bars). Deliberately generic
+ *     listicle noise; every domain uses the reserved .example TLD.
+ *   No other copy was invented.
  */
 
 const FIGURES = {
@@ -183,6 +187,15 @@ const COPY = {
       foldLabel: 'Fold',
       result: 'Rank 12. Still below the fold.',
       hint: 'Try one.',
+      // ADDED KEY (flagged): the five plausible result rows. Interchangeable
+      // listicle slop by design; .example is a reserved TLD.
+      results: [
+        { url: 'phototipsdaily.example › ai-guide', title: '15 Best AI Photography Tips for Beginners (2026 Guide)', snippet: 'Discover the tips, tricks and free presets every beginner needs to shoot like…' },
+        { url: 'presetvault.example › free-downloads', title: 'Top 50 Free Lightroom Presets, Tested and Ranked', snippet: 'We tested 400 presets so you don’t have to. Download the best free packs…' },
+        { url: 'shutterexpert.example › guides', title: 'AI Photography: The Complete 2026 Guide (Updated Weekly)', snippet: 'Everything you need to know about AI photography, in one regularly updated…' },
+        { url: 'lenshacker.example › settings', title: '10 Camera Settings the Pros Don’t Want You to Know', snippet: 'Number 7 will change the way you shoot forever. Our experts reveal the…' },
+        { url: 'editorpicks.example › reviews', title: 'Best AI Photo Editors Ranked: We Tried Them All', snippet: 'From free tools to full pro suites, these are the editors that actually…' },
+      ],
       kicker:
         'Notice what none of those moves were about: making the work better. This is the part that is easy to miss — optimisation is not a neutral layer sitting on top of the work. It reaches back into the work and changes it.',
     },
@@ -210,6 +223,14 @@ const COPY = {
       foldLabel: '折叠线',
       result: '第 12 位。仍然在折叠线以下。',
       hint: '点一个试试。',
+      // 新增键（已标记）：五条"像真的"结果行。刻意做成可互换的清单体噪音；.example 为保留域名。
+      results: [
+        { url: 'phototipsdaily.example › ai-guide', title: '2026 新手 AI 摄影技巧 Top 15（完整指南）', snippet: '每个新手都需要的技巧、窍门和免费预设，一次看懂，拍出大片感…' },
+        { url: 'presetvault.example › free-downloads', title: '50 款免费 Lightroom 预设实测排行', snippet: '我们实测了 400 款预设，你不用再踩坑。最好用的免费合集下载…' },
+        { url: 'shutterexpert.example › guides', title: 'AI 摄影完全指南（每周更新）', snippet: '关于 AI 摄影你需要知道的一切，都在这一篇定期更新的长文里…' },
+        { url: 'lenshacker.example › settings', title: '专业摄影师不想让你知道的 10 个相机设置', snippet: '第 7 个会永远改变你的拍摄方式。我们的专家逐一揭秘…' },
+        { url: 'editorpicks.example › reviews', title: 'AI 修图工具全评测：哪个真的好用', snippet: '从免费工具到专业套件，这些才是真正值得装的修图应用…' },
+      ],
       kicker:
         '注意刚才那几步都没在做的一件事：把作品本身做得更好。这一点很容易被忽略——优化不是浮在作品上面的一层中性操作。它会往回伸进作品里，把作品改掉。',
     },

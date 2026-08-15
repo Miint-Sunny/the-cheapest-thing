@@ -206,6 +206,11 @@
   }
 
   function boot() {
+    /* default language follows the browser (no storage involved);
+       the toggle still switches freely */
+    const nav = (navigator.languages && navigator.languages[0]) || navigator.language || '';
+    if (/^zh/i.test(nav)) APP.lang = 'zh';
+
     APP.fillCopy();
     ORDER.forEach(function (id) {
       if (window.SCREENS && SCREENS[id] && SCREENS[id].build) SCREENS[id].build(APP);
