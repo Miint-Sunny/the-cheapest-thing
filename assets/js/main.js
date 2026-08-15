@@ -123,6 +123,7 @@
     if (activeId) {
       dwell[activeId] += now - activeSince;
       if (entered.has(activeId) && SCREENS[activeId] && SCREENS[activeId].leave) SCREENS[activeId].leave();
+      if (SCREENS[activeId] && SCREENS[activeId].deactivate) SCREENS[activeId].deactivate(id);
     }
     activeId = id;
     activeSince = now;
@@ -136,10 +137,13 @@
     document.querySelector('.rail').dataset.on = on;
     document.querySelector('.lang-toggle').dataset.on = on;
 
-    /* enter() fires once per screen, ever (§5) */
+    /* enter() fires once per screen, ever (§5); activate() fires on every
+       visit so screens can restore shared state (the adopted list) */
     if (!entered.has(id)) {
       entered.add(id);
       if (!APP.reduced && SCREENS[id] && SCREENS[id].enter) SCREENS[id].enter();
+    } else if (!APP.reduced && SCREENS[id] && SCREENS[id].activate) {
+      SCREENS[id].activate();
     }
   }
 

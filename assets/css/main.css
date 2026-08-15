@@ -504,9 +504,12 @@ img, svg, canvas { display: block; max-width: 100%; }
   width: 100%;
   height: 100%;
   z-index: 1;
+  transition: transform 900ms var(--ease), filter 900ms var(--ease), opacity 900ms var(--ease);
 }
+#s2.flooded .flood { transform: scale(0.93); filter: blur(5px); opacity: 0.55; }
 .s2-wrap { position: relative; z-index: 2; }
 .s2-figure {
+  transition: opacity 700ms var(--ease), transform 700ms var(--ease);
   margin-block: 2rem;
   background: rgb(244 243 240 / 0.86);
   backdrop-filter: blur(2px);
@@ -517,6 +520,7 @@ img, svg, canvas { display: block; max-width: 100%; }
   max-width: var(--measure);
 }
 #s2 .kicker { position: relative; z-index: 2; }
+#s2.pending:not(.surfaced) .s2-figure { opacity: 0; transform: translateY(14px); }
 
 /* ------------------------------------------------------------ 3 · rank */
 
@@ -654,9 +658,12 @@ img, svg, canvas { display: block; max-width: 100%; }
   background: var(--paper);
   border: 1px solid var(--rule);
   border-radius: 8px;
-  padding: 1.1rem 1.3rem;
+  overflow: hidden;
   --skel: rgb(11 11 12 / 0.10);
 }
+.answer-inner { padding: 1.1rem 1.3rem; }
+.answer-box.collapsed { height: 0; opacity: 0; border-color: transparent; }
+.answer-stage.docked .answer-box { border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
 .ans-skel i { display: block; height: 9px; margin-bottom: 8px; }
 .ans-skel { margin-bottom: 1rem; }
 .ans-figs { display: flex; flex-direction: column; gap: 0.8rem; }
@@ -671,8 +678,23 @@ img, svg, canvas { display: block; max-width: 100%; }
 }
 .stat-claim { font-size: var(--fs-small); color: var(--tx2); max-width: 38ch; }
 
-.serp-dock { position: relative; }
+.serp-dock { position: relative; max-height: 300px; overflow: hidden; }
 .serp-dock .serp { border-top-left-radius: 0; border-top-right-radius: 0; border-top: 0; }
+.serp-dock::before {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 72px;
+  background: linear-gradient(rgb(231 231 228 / 0), var(--system));
+  z-index: 1;
+  pointer-events: none;
+}
+.serp-dock::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  border-top: 2px dashed var(--mute);
+}
 
 .crawl { margin-block: 2.2rem; max-width: 46rem; }
 .crawl-lead { font-size: 1.15rem; font-weight: 700; margin-bottom: 0.9rem; }
@@ -681,6 +703,7 @@ img, svg, canvas { display: block; max-width: 100%; }
 .crawl-figure .fig-value { font-size: clamp(1.9rem, 1.5rem + 2.4vw, 3.2rem); }
 
 .s4-closing {
+  transition: opacity 700ms var(--ease), transform 700ms var(--ease);
   font-size: clamp(1.6rem, 1.1rem + 2.6vw, 2.6rem);
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -689,6 +712,7 @@ img, svg, canvas { display: block; max-width: 100%; }
   margin-top: 2.4rem;
   text-wrap: balance;
 }
+.s4-closing.pending { opacity: 0; transform: translateY(14px); }
 
 /* ----------------------------------------------------------- 5 · close */
 
@@ -812,6 +836,7 @@ img, svg, canvas { display: block; max-width: 100%; }
 
 @media (max-width: 760px) {
   .serp-zone { grid-template-columns: 1fr; }
+  .serp-dock { max-height: 240px; }
   .row-you::before { left: -0.6rem; }
   .credits-grid { grid-template-columns: 1fr; }
   .mock-cols { grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(3, auto); }
