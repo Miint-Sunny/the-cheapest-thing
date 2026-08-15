@@ -87,12 +87,138 @@
     });
   }
 
+  /* -------------------------------------------- sections, rail, dwell */
+
+  /* which chrome colour the fixed UI needs over each section */
+  const REGISTER = { s0: 'dark', s1: 'light', s2: 'light', s3: 'light', s4: 'light', s5: 'dark', s6: 'dark' };
+
+  const entered = new Set();
+  let activeId = null;
+  const dwell = { s0: 0, s1: 0, s2: 0, s3: 0, s4: 0, s5: 0, s6: 0 };
+  let activeSince = performance.now();
+  const t0 = performance.now();
+
+  function railButtons() {
+    return Array.prototype.slice.call(document.querySelectorAll('.rail button'));
+  }
+
+  function buildRail() {
+    const rail = document.querySelector('.rail');
+    rail.hidden = false;
+    const names = APP.t('global.sectionNames');
+    ORDER.forEach(function (id, i) {
+      const b = el('button');
+      b.type = 'button';
+      b.setAttribute('aria-label', names[i]);
+      b.addEventListener('click', function () {
+        document.getElementById(id).scrollIntoView({ behavior: APP.reduced ? 'auto' : 'smooth' });
+      });
+      rail.append(b);
+    });
+  }
+
+  function setActive(id) {
+    if (id === activeId) return;
+    const now = performance.now();
+    if (activeId) {
+      dwell[activeId] += now - activeSince;
+      if (entered.has(activeId) && SCREENS[activeId] && SCREENS[activeId].leave) SCREENS[activeId].leave();
+    }
+    activeId = id;
+    activeSince = now;
+
+    const idx = ORDER.indexOf(id);
+    railButtons().forEach(function (b, i) {
+      if (i === idx) b.setAttribute('aria-current', 'true');
+      else b.removeAttribute('aria-current');
+    });
+    const on = REGISTER[id] === 'light' ? 'light' : 'dark';
+    document.querySelector('.rail').dataset.on = on;
+    document.querySelector('.lang-toggle').dataset.on = on;
+
+    /* enter() fires once per screen, ever (§5) */
+    if (!entered.has(id)) {
+      entered.add(id);
+      if (!APP.reduced && SCREENS[id] && SCREENS[id].enter) SCREENS[id].enter();
+    }
+  }
+
+  function observeSections() {
+    /* "Active" means the section straddles the middle band of the viewport.
+       The spec's threshold-0.55 intent breaks on sections taller than the
+       viewport (their visible ratio can never reach 0.55), so the band is
+       measured against the viewport instead. */
+    const io = new IntersectionObserver(
+      function (entries) {
+        let best = null;
+        entries.forEach(function (e) {
+          if (!e.isIntersecting) return;
+          if (!best || e.intersectionRect.height > best.intersectionRect.height) best = e;
+        });
+        if (best) setActive(best.target.id);
+      },
+      { rootMargin: '-45% 0px -45% 0px', threshold: 0 }
+    );
+    ORDER.forEach(function (id) {
+      io.observe(document.getElementById(id));
+    });
+  }
+
+  /* ---------------------------------------------------- ?debug=1 panel */
+
+  function buildDebug() {
+    if (new URLSearchParams(location.search).get('debug') !== '1') return;
+    const box = document.querySelector('.debug');
+    box.hidden = false;
+
+    const total = el('div');
+    const rows = ORDER.map(function (id) {
+      const r = el('div');
+      r.dataset.for = id;
+      return r;
+    });
+    const jump = el('div', 'dbg-jump');
+    ORDER.forEach(function (id, i) {
+      const b = el('button', null, String(i));
+      b.type = 'button';
+      b.addEventListener('click', function () {
+        document.getElementById(id).scrollIntoView({ behavior: APP.reduced ? 'auto' : 'smooth' });
+      });
+      jump.append(b);
+    });
+    box.append(total);
+    rows.forEach(function (r) { box.append(r); });
+    box.append(jump);
+
+    setInterval(function () {
+      const now = performance.now();
+      const totalS = (now - t0) / 1000;
+      total.innerHTML = 'total <b>' + totalS.toFixed(1) + 's</b>';
+      ORDER.forEach(function (id, i) {
+        const ms = dwell[id] + (id === activeId ? now - activeSince : 0);
+        rows[i].innerHTML = id + ' <b>' + (ms / 1000).toFixed(1) + 's</b>' + (id === activeId ? ' ·' : '');
+      });
+    }, 500);
+  }
+
   function boot() {
     APP.fillCopy();
     ORDER.forEach(function (id) {
       if (window.SCREENS && SCREENS[id] && SCREENS[id].build) SCREENS[id].build(APP);
     });
     wireLangToggle();
+    buildRail();
+
+    if (APP.reduced) {
+      /* reduced motion: every screen renders its final state immediately;
+         enter() never runs animations (§5) */
+      ORDER.forEach(function (id) {
+        if (SCREENS[id] && SCREENS[id].showFinalState) SCREENS[id].showFinalState();
+      });
+    }
+
+    observeSections();
+    buildDebug();
   }
 
   boot();
