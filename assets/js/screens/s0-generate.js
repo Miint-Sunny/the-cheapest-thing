@@ -17,7 +17,7 @@
 
   const state = { typed: false, started: false, finished: false };
   let ctx, root, promptTextEl, timerValEl;
-  let typeTimer = 0, autoTimer = 0, timerRaf = 0;
+  let typeTimer = 0, autoTimer = 0, timerRaf = 0, genT0 = 0, hiddenAt = 0;
   let stageTimers = [];
 
   function blocksInOrder() {
@@ -62,17 +62,41 @@
   }
 
   function startTimer() {
-    const t0 = performance.now();
+    genT0 = performance.now();
     root.querySelector('.gen-timer').hidden = false;
     function tick(now) {
-      timerValEl.textContent = ((now - t0) / 1000).toFixed(1) + 's';
+      const elapsed = (now - genT0) / 1000;
+      timerValEl.textContent = elapsed.toFixed(1) + 's';
+      /* freeze on the first frame past 6.2 s once the page has settled —
+         still real time, just measured rather than scheduled */
+      if (elapsed >= 6.2 && root.classList.contains('settled')) {
+        finish(elapsed);
+        return;
+      }
       timerRaf = requestAnimationFrame(tick);
     }
     timerRaf = requestAnimationFrame(tick);
   }
 
-  function freezeTimer() {
+  /* browsers throttle a background tab: don't bill hidden time to the
+     generation — measure the time the machine actually ran */
+  document.addEventListener('visibilitychange', function () {
+    if (!state.started || state.finished) return;
+    if (document.hidden) {
+      hiddenAt = performance.now();
+    } else if (hiddenAt) {
+      genT0 += performance.now() - hiddenAt;
+      hiddenAt = 0;
+    }
+  });
+
+  function finish(elapsed) {
+    if (state.finished) return;
+    state.finished = true;
     cancelAnimationFrame(timerRaf);
+    timerValEl.textContent = elapsed.toFixed(1) + 's';
+    root.classList.add('done');
+    root.querySelector('.scroll-cue').hidden = false;
     root.querySelector('.gen-done').hidden = false;
   }
 
@@ -116,13 +140,8 @@
       );
     }, STAGE * 4));
 
-    /* finish — freeze the timer at what it really reads (≈6.2 s) */
-    stageTimers.push(setTimeout(function () {
-      state.finished = true;
-      root.classList.add('done');
-      root.querySelector('.scroll-cue').hidden = false;
-      freezeTimer();
-    }, 6200));
+    /* the finish is measured, not scheduled: the timer's own tick freezes
+       it on the first frame past 6.2 s (see startTimer) */
   }
 
   SCREENS.s0 = {
