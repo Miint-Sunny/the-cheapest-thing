@@ -66,11 +66,33 @@
     },
   });
 
+  /* ------------------------------------------------------------- i18n */
+  /* Language lives in memory only — no storage of any kind (§2). The
+     toggle re-renders every data-copy node and asks each screen to
+     relabel its JS-built content without touching animation state. */
+
+  APP.setLang = function (lang) {
+    APP.lang = lang;
+    APP.fillCopy();
+    ORDER.forEach(function (id) {
+      if (SCREENS[id] && SCREENS[id].relabel) SCREENS[id].relabel();
+    });
+  };
+
+  function wireLangToggle() {
+    const toggle = document.querySelector('.lang-toggle');
+    if (!toggle) return;
+    toggle.addEventListener('click', function () {
+      APP.setLang(APP.lang === 'en' ? 'zh' : 'en');
+    });
+  }
+
   function boot() {
     APP.fillCopy();
     ORDER.forEach(function (id) {
       if (window.SCREENS && SCREENS[id] && SCREENS[id].build) SCREENS[id].build(APP);
     });
+    wireLangToggle();
   }
 
   boot();
