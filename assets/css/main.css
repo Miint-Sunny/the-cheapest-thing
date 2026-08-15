@@ -205,6 +205,15 @@ img, svg, canvas { display: block; max-width: 100%; }
   max-width: 44ch;
 }
 
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
 /* ---------------------------------------------------------- chrome: skip */
 
 .skip {
@@ -843,7 +852,8 @@ img, svg, canvas { display: block; max-width: 100%; }
   .credits-grid { grid-template-columns: 1fr; }
   .mock-cols { grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(3, auto); }
   .mock-cols .mock-line:nth-child(n+7) { display: none; }
-  .gen-timer { bottom: clamp(3.4rem, 8svh, 5rem); }
+  .gen-timer { bottom: 6rem; right: 1.25rem; }
+  .scroll-cue { bottom: 1.2rem; }
 }
 
 /* -------------------------------------------------- snap & reduced motion */

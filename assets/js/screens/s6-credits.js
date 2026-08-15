@@ -52,7 +52,6 @@
 
     const img = document.createElement('img');
     img.alt = '';
-    img.loading = 'lazy';
     img.src = imgUrl;
     /* over file:// the absolute URL in the meta tag is unreachable — fall
        back to the same file by its relative path so the card still renders */

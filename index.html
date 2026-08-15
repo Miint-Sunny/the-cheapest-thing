@@ -30,6 +30,8 @@
   }
   </script>
 
+  <link rel="preload" href="assets/fonts/space-grotesk-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/jetbrains-mono-var.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="assets/css/main.css">
 </head>
 <body>
@@ -39,6 +41,7 @@
   <nav class="rail" hidden><!-- ticks built by main.js --></nav>
 
   <main id="main">
+    <h1 class="sr-only" data-copy="global.documentTitle"></h1>
 
     <!-- ================================================= 0 · Generate -->
     <section class="scr scr-ink" id="s0" tabindex="-1">
@@ -193,7 +196,7 @@
           <div class="cred-col">
             <h2 class="cred-h mono" data-copy="s6.sources"></h2>
             <p class="cred-note" data-copy="s6.sourcesNote"></p>
-            <ol class="refs"><!-- built by s6-credits.js --></ol>
+            <ol class="refs" lang="en"><!-- built by s6-credits.js --></ol>
             <p class="cred-note" data-copy="s6.fonts"></p>
           </div>
           <div class="cred-col">
