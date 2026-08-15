@@ -112,7 +112,18 @@
     canvas.style.height = h + 'px';
     const g = canvas.getContext('2d');
     g.scale(dpr, dpr);
-    return { g: g, cols: cols, cell: cell, mark: mark };
+    return { g: g, cols: cols, cell: cell, mark: mark, w: w, h: h };
+  }
+
+  /* the locate beat: coordinate axes snap onto the one returned visit */
+  function drawCrosshair(L) {
+    const cx = (SIGNAL_AT % L.cols) * L.cell + L.mark / 2;
+    const cy = Math.floor(SIGNAL_AT / L.cols) * L.cell + L.mark / 2;
+    L.g.fillStyle = 'rgb(255 90 31 / 0.8)';
+    L.g.fillRect(0, cy, L.w, 1);
+    L.g.fillRect(cx, 0, 1, L.h);
+    L.g.fillStyle = '#FF5A1F';
+    L.g.fillRect(cx - 3, cy - 3, 6, 6);
   }
 
   function drawCrawl(progressive) {
@@ -133,14 +144,19 @@
     }
     if (!progressive) {
       chunk(MARKS);
+      drawCrosshair(L);
       crawlDrawn = true;
       return;
     }
     const perFrame = Math.ceil(MARKS / 90); /* ~1.5 s at 60 fps */
     (function step() {
       chunk(i + perFrame);
-      if (i < MARKS) requestAnimationFrame(step);
-      else crawlDrawn = true;
+      if (i < MARKS) {
+        requestAnimationFrame(step);
+      } else {
+        crawlDrawn = true;
+        setTimeout(function () { drawCrosshair(L); }, 260);
+      }
     })();
   }
 
