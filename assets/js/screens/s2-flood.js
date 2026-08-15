@@ -13,7 +13,7 @@
   window.SCREENS = window.SCREENS || {};
 
   let ctx, root, canvas, g;
-  let cards = [], raf = 0, t0 = 0, done = false, started = false;
+  let cards = [], raf = 0, t0 = 0, done = false, started = false, drawn = 0;
 
   /* deterministic PRNG so the field is identical on every visit */
   function mulberry32(seed) {
@@ -73,6 +73,8 @@
       const p = card.d / maxD;
       card.t = FLOOD_MS * Math.pow(p, 1.65);
     });
+    cards.sort(function (a, b) { return a.t - b.t; });
+    drawn = 0;
   }
 
   function drawCard(card) {
@@ -95,14 +97,13 @@
   }
 
   function frame(now) {
+    /* cards never move once placed — draw only the newly spawned ones */
     const t = now - t0;
-    g.clearRect(0, 0, canvas.width, canvas.height);
-    let pending = false;
-    for (let i = 0; i < cards.length; i++) {
-      if (cards[i].t <= t) drawCard(cards[i]);
-      else pending = true;
+    while (drawn < cards.length && cards[drawn].t <= t) {
+      drawCard(cards[drawn]);
+      drawn += 1;
     }
-    if (pending) {
+    if (drawn < cards.length) {
       raf = requestAnimationFrame(frame);
     } else {
       raf = 0;
@@ -113,6 +114,7 @@
   function drawAll() {
     g.clearRect(0, 0, canvas.width, canvas.height);
     cards.forEach(drawCard);
+    drawn = cards.length;
   }
 
   function settle() {
