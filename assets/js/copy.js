@@ -275,8 +275,8 @@ const COPY = {
       buildToggle: 'How this page was built',
       buildRows: [
         { k: 'Built with', v: 'Claude Code (Anthropic)' },
-        { k: 'Prompt iterations', v: '2' },
-        { k: 'Commits', v: '15' },
+        { k: 'Prompt iterations', v: '3' },
+        { k: 'Commits', v: '20' },
         { k: 'Decided by a person', v: 'the argument, the seven screens, every line on this page, and which evidence to trust' },
         { k: 'Build log', v: 'https://github.com/Miint-Sunny/the-cheapest-thing' },
       ],
@@ -289,8 +289,8 @@ const COPY = {
       buildToggle: '这个页面是怎么做出来的',
       buildRows: [
         { k: '构建工具', v: 'Claude Code (Anthropic)' },
-        { k: 'prompt 迭代轮数', v: '2' },
-        { k: 'commit 数', v: '15' },
+        { k: 'prompt 迭代轮数', v: '3' },
+        { k: 'commit 数', v: '20' },
         { k: '由人决定的部分', v: '论点、七个屏幕、这个页面上的每一句话，以及该相信哪些证据' },
         { k: '构建记录', v: 'https://github.com/Miint-Sunny/the-cheapest-thing' },
       ],
