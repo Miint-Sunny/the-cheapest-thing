@@ -1,0 +1,98 @@
+/* ==========================================================================
+   The Cheapest Thing on the Internet — main.css
+   Plain CSS. No framework, no build step. See BUILD-SPEC §4 for the palette
+   and §2 for the constraints this file is written against.
+   ========================================================================== */
+
+/* ------------------------------------------------------------------ fonts */
+/* Both families ship as self-hosted variable fonts (latin subset), so one
+   file per family covers every weight used. CJK falls back to the system
+   stack — shipping a CJK webfont would blow the 500 KB budget. */
+
+@font-face {
+  font-family: 'Space Grotesk';
+  src: url('../fonts/space-grotesk-var.woff2') format('woff2');
+  font-weight: 300 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('../fonts/jetbrains-mono-var.woff2') format('woff2');
+  font-weight: 100 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ----------------------------------------------------------------- tokens */
+
+:root {
+  /* Palette — BUILD-SPEC §4. Use exactly these, and no others.
+     Alpha variants of these tokens are permitted where a surface needs a
+     shade (canvas cards, skeleton blocks, secondary text on --system). */
+  --ink:    #0B0B0C;
+  --paper:  #F4F3F0;
+  --system: #E7E7E4;
+  --rule:   #C9C8C3;
+  --mute:   #6B6A66;
+  --signal: #FF5A1F;
+
+  /* Type */
+  --font-body: 'Space Grotesk', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif;
+  --font-mono: 'JetBrains Mono', 'SFMono-Regular', Menlo, Consolas, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', monospace;
+
+  /* Fluid scale — body 17–19px, section lead 28–44px (BUILD-SPEC §4) */
+  --fs-body: clamp(1.0625rem, 1rem + 0.35vw, 1.1875rem);
+  --fs-lead: clamp(1.75rem, 1.2rem + 2.6vw, 2.75rem);
+  --fs-small: clamp(0.8125rem, 0.78rem + 0.15vw, 0.875rem);
+  --fs-chip: 0.72rem;
+
+  /* Motion — long, calm. Nothing bounces. */
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --t-fast: 400ms;
+  --t-slow: 900ms;
+
+  --rail-w: 44px;
+  --measure: 34rem;
+}
+
+/* ------------------------------------------------------------------ reset */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  line-height: 1.55;
+  background: var(--ink);
+  color: var(--paper);
+  overflow-x: hidden;
+}
+
+h1, h2, h3, p, ol, ul, figure, blockquote { margin: 0; }
+ol, ul { padding: 0; list-style: none; }
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+a { color: inherit; }
+img, svg, canvas { display: block; max-width: 100%; }
+
+/* Visible focus everywhere; ring colour follows the section's text colour
+   so it always clears 3:1 against the background behind it. */
+:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+  border-radius: 2px;
+}
