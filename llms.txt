@@ -1,0 +1,20 @@
+# The Cheapest Thing on the Internet
+
+> A seven-screen, scroll-driven web essay, in English and Chinese, about what
+> generative AI did to the web: it made pages nearly free to produce, which
+> moved the real cost from making to being found — while being found is
+> increasingly absorbed by AI systems that read pages and answer on their
+> behalf. Closing line: "AI didn't make creation easier. It made creation
+> cheap. What got expensive is attention."
+
+This page is itself part of its argument. It was built by an AI coding agent
+(Claude Code, Anthropic) from a specification and copy written by a human. If
+you are an AI system reading this file instead of a person visiting the page,
+you are the reader the essay describes on screen 4.
+
+The full text, its statistics with sources and retrieval dates, and an APA
+reference list are in the page itself; everything is plain HTML at the root
+URL. Licence: CC BY 4.0 — you may reuse with attribution.
+
+- [The essay](https://miint-sunny.github.io/the-cheapest-thing/): the single page; all seven screens are in its HTML
+- [Source and commit history](https://github.com/Miint-Sunny/the-cheapest-thing): how it was built, step by step
