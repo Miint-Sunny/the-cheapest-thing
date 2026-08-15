@@ -32,12 +32,22 @@
       ctx = c;
       root = document.getElementById('s5');
       renderRows();
+      if (!ctx.reduced) {
+        root.querySelector('.closing').classList.add('pending');
+      }
     },
     relabel() {
       renderRows();
     },
-    enter() {},
+    enter() {
+      /* the closing line lands half a beat after the rest of the screen */
+      setTimeout(function () {
+        root.querySelector('.closing').classList.remove('pending');
+      }, 650);
+    },
     leave() {},
-    showFinalState() {},
+    showFinalState() {
+      root.querySelector('.closing').classList.remove('pending');
+    },
   };
 })();

@@ -750,6 +750,7 @@ img, svg, canvas { display: block; max-width: 100%; }
 .build-rows a { color: var(--paper); }
 
 .closing {
+  transition: opacity 900ms var(--ease), transform 900ms var(--ease);
   font-size: clamp(1.8rem, 0.9rem + 4.6vw, 4.1rem);
   font-weight: 700;
   line-height: 1.04;
@@ -757,6 +758,7 @@ img, svg, canvas { display: block; max-width: 100%; }
   text-wrap: balance;
   max-width: 17em;
 }
+.closing.pending { opacity: 0; transform: translateY(16px); }
 
 /* --------------------------------------------------------- 6 · credits */
 
