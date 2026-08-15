@@ -35,10 +35,11 @@ cites it.
 
 ## Licence
 
-The page and its text are released under
-[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) — see `LICENSE`.
-
-Fonts: [Space Grotesk](https://github.com/floriankarsten/space-grotesk) and
-[JetBrains Mono](https://github.com/JetBrains/JetBrainsMono), both under the
-SIL Open Font License 1.1, self-hosted in `assets/fonts/` with their licence
-texts alongside.
+- **Code** (HTML, CSS, JavaScript): [MIT](LICENSE).
+- **Text, argument and visual design** of the page:
+  [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/) — full legal
+  text in `LICENSE-CONTENT`. Non-commercial reuse only, with attribution.
+- Fonts: [Space Grotesk](https://github.com/floriankarsten/space-grotesk) and
+  [JetBrains Mono](https://github.com/JetBrains/JetBrainsMono), both under the
+  SIL Open Font License 1.1, self-hosted in `assets/fonts/` with their licence
+  texts alongside.

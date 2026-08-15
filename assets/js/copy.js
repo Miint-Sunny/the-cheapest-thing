@@ -287,7 +287,7 @@ const COPY = {
       fonts: 'Set in Space Grotesk and JetBrains Mono, both under the SIL Open Font License.',
       thisPage: 'This page',
       licence:
-        'Released under a Creative Commons Attribution 4.0 International licence. You may copy, adapt and redistribute this page, including commercially, with attribution.',
+        'The text and design of this page are released under a Creative Commons Attribution-NonCommercial 4.0 International licence; the code is MIT-licensed. You may copy, adapt and redistribute this page for non-commercial purposes, with attribution.',
       aiDisclosure:
         'Generative AI disclosure: the code of this page was written by Claude Code (Anthropic) from a specification I wrote. The argument, the structure, every line of text and the choice of evidence are mine. No generative image, audio or video tools were used; all visuals are drawn in CSS, SVG and canvas.',
       repo: 'Source and full commit history',
@@ -302,7 +302,7 @@ const COPY = {
       fonts: '正文使用 Space Grotesk 与 JetBrains Mono，均遵循 SIL 开放字体许可。',
       thisPage: '关于这个页面',
       licence:
-        '本作品以知识共享署名 4.0 国际许可协议发布。你可以复制、改编、再分发本页面，包括商业用途，只需署名。',
+        '本页面的文字与设计以知识共享 署名—非商业性使用 4.0 国际许可协议发布，代码以 MIT 许可发布。你可以出于非商业目的复制、改编、再分发本页面，只需署名。',
       aiDisclosure:
         '生成式 AI 使用声明：本页面的代码由 Claude Code (Anthropic) 依据我撰写的规格生成。论点、结构、每一句文字以及证据的取舍由我决定。未使用任何生成式图像、音频或视频工具；所有视觉元素均由 CSS、SVG 和 canvas 绘制。',
       repo: '源码与完整提交记录',
