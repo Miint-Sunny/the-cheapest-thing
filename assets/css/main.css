@@ -290,13 +290,49 @@ img, svg, canvas { display: block; max-width: 100%; }
 }
 
 .gen-console {
-  position: relative;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
   z-index: 3;
   width: min(34rem, calc(100vw - 2.5rem));
   display: flex;
   flex-direction: column;
   gap: 1.2rem;
+  transition: left 700ms var(--ease), top 700ms var(--ease), transform 700ms var(--ease), width 700ms var(--ease);
 }
+
+/* sequence states — classes accumulate on #s0 as the stages pass */
+#s0 { transition: background 900ms var(--ease); }
+#s0 .gen-mock { opacity: 0; transition: opacity 500ms var(--ease); }
+#s0.generating .gen-mock { opacity: 1; }
+#s0.generating .gen-console {
+  left: clamp(0.9rem, 3vw, 2.2rem);
+  top: clamp(0.9rem, 3vw, 2.2rem);
+  transform: translate(0, 0);
+  width: min(21rem, 62vw);
+}
+#s0.generating .prompt-box {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: rgb(11 11 12 / 0.3);
+  font-size: 0.72rem;
+  padding: 0.55rem 0.75rem;
+  min-height: 0;
+  box-shadow: 0 10px 30px rgb(11 11 12 / 0.25);
+}
+#s0.generating .gen-btn { opacity: 0; pointer-events: none; }
+#s0 .mock-headline { opacity: 0; transition: opacity 600ms var(--ease); }
+#s0.typed .mock-headline { opacity: 1; }
+#s0.lit { --bg: var(--paper); --tx: var(--ink); --tx2: var(--mute); }
+#s0 .mock-cta { transition: background 700ms var(--ease); }
+#s0:not(.lit) .mock-cta { background: rgb(11 11 12 / 0.12); }
+#s0.media-on .mock-img::before { opacity: 1; }
+#s0.settled .mock-page { box-shadow: 0 16px 50px rgb(11 11 12 / 0.22); }
+.gen-btn, .scroll-cue, .gen-timer { opacity: 0; transition: opacity 600ms var(--ease); }
+#s0.ready .gen-btn { opacity: 1; animation: breathe 2.6s ease-in-out 400ms infinite; }
+#s0.generating .gen-timer, #s0.done .scroll-cue { opacity: 1; }
+@keyframes breathe { 50% { opacity: 0.55; } }
 
 .prompt-box {
   border: 1px solid rgb(244 243 240 / 0.28);
@@ -308,6 +344,7 @@ img, svg, canvas { display: block; max-width: 100%; }
   min-height: 3.4rem;
 }
 .prompt-mark { color: var(--rule); margin-right: 0.6em; }
+.prompt-text.is-placeholder { opacity: 0.45; }
 .caret {
   display: inline-block;
   width: 0.55em;
@@ -414,19 +451,24 @@ img, svg, canvas { display: block; max-width: 100%; }
   margin-top: 0.4rem;
 }
 .mock-media { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: clamp(0.9rem, 2.5vh, 1.6rem); }
-.mock-img { height: clamp(52px, 9vh, 92px); border-radius: 5px; background: var(--skel); }
-/* CSS-generated "media": layered gradients + an SVG noise data-URI, no images */
-.mock-img.m1, .mock-img.m2, .mock-img.m3 {
-  background-image:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.35 0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E"),
-    linear-gradient(135deg, rgb(11 11 12 / 0.55), rgb(107 106 102 / 0.35) 55%, rgb(201 200 195 / 0.5));
+.mock-img {
+  position: relative;
+  overflow: hidden;
+  height: clamp(52px, 9vh, 92px);
+  border-radius: 5px;
+  background: var(--skel);
 }
-.mock-img.m2 { background-image:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.35 0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E"),
-    linear-gradient(200deg, rgb(107 106 102 / 0.5), rgb(11 11 12 / 0.35) 60%, rgb(201 200 195 / 0.45)); }
-.mock-img.m3 { background-image:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.35 0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E"),
-    linear-gradient(320deg, rgb(201 200 195 / 0.55), rgb(107 106 102 / 0.4) 50%, rgb(11 11 12 / 0.4)); }
+.mock-img::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 700ms var(--ease);
+}
+.mock-img.m1::before { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.35 0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E"), linear-gradient(135deg, rgb(107 106 102 / 0.55), rgb(201 200 195 / 0.5) 55%, rgb(244 243 240 / 0.6)); }
+.mock-img.m2::before { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.35 0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E"), linear-gradient(200deg, rgb(201 200 195 / 0.6), rgb(107 106 102 / 0.45) 60%, rgb(11 11 12 / 0.28)); }
+.mock-img.m3::before { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.35 0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E"), linear-gradient(320deg, rgb(244 243 240 / 0.5), rgb(201 200 195 / 0.55) 50%, rgb(107 106 102 / 0.5)); }
+
 .mock-cols {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
