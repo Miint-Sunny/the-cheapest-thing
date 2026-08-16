@@ -16,5 +16,5 @@ The full text, its statistics with sources and retrieval dates, and an APA
 reference list are in the page itself; everything is plain HTML at the root
 URL. Licence: text and design CC BY-NC 4.0 (non-commercial, with attribution); code MIT.
 
-- [The essay](https://miint-sunny.github.io/the-cheapest-thing/): the single page; all seven screens are in its HTML
-- [Source and commit history](https://github.com/Miint-Sunny/the-cheapest-thing): how it was built, step by step
+- [The essay](https://miint-sunny.github.io/the-cheapest-thing-S5leebIY/): the single page; all seven screens are in its HTML
+- [Source and commit history](https://github.com/Miint-Sunny/the-cheapest-thing-S5leebIY): how it was built, step by step

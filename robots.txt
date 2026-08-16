@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://miint-sunny.github.io/the-cheapest-thing/sitemap.xml
+Sitemap: https://miint-sunny.github.io/the-cheapest-thing-S5leebIY/sitemap.xml

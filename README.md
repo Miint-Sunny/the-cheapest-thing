@@ -10,7 +10,7 @@ The page is deliberately reflexive: it is a website, built by an AI coding
 agent, about AI-built websites that nobody finds. Its own metadata, licence and
 indexing status are displayed on the final screen as part of the argument.
 
-**Live:** https://miint-sunny.github.io/the-cheapest-thing/
+**Live:** https://miint-sunny.github.io/the-cheapest-thing-S5leebIY/
 
 ## Running it locally
 
