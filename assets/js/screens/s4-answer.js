@@ -7,14 +7,14 @@
    answer box grows from the top and pushes the list — including the
    hard-won rank-12 row — down past the dock's clipped edge.
 
-   Beat two draws exactly 38,065 faint marks on a canvas with a single
+   Beat two draws exactly 38,066 faint marks on a canvas with a single
    --signal mark: one AI crawler's fetches for every visit it sent back.
    The caveat about the measurement stays on screen. */
 (function () {
   'use strict';
   window.SCREENS = window.SCREENS || {};
 
-  const MARKS = 38065;
+  const MARKS = 38066; /* 38,065.7 : 1 — a mark cannot be fractional */
   const SIGNAL_AT = 23486; /* fixed position for the one returned visit */
 
   let ctx, root, dock, box;

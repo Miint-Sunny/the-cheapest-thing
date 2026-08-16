@@ -22,7 +22,7 @@
 const FIGURES = {
   aiSites: {
     value: '≈35%',
-    claim: { en: 'of newly published websites were AI-generated or AI-assisted', zh: '的新发布网站由 AI 生成或 AI 辅助生成' },
+    claim: { en: 'of newly published websites were classified as AI-generated or AI-assisted', zh: '的新发布网站被归类为 AI 生成或 AI 辅助生成' },
     asOf: 'mid-2025',
     source: 'Dolezal, Alam, Graham & Bohacek (2026), Internet Archive / Imperial College',
     retrieved: '2026-08-15',
@@ -44,13 +44,13 @@ const FIGURES = {
   },
   clickInsideSummary: {
     value: '1%',
-    claim: { en: 'of visits end in a click on a source cited inside the summary', zh: '访客点击摘要内所引用来源的比例' },
+    claim: { en: 'of visits to pages with an AI summary end in a click on a source cited inside it', zh: '在出现 AI 摘要的页面上，访客点击摘要内所引用来源的比例' },
     asOf: 'March 2025',
     source: 'Chapekis & Lieb (2025), Pew Research Center',
     retrieved: '2026-08-15',
   },
   crawlRatio: {
-    value: '38,065 : 1',
+    value: '38,065.7 : 1',
     claim: { en: 'pages fetched by one AI crawler for every visit it sent back', zh: '某个 AI 爬虫每回送 1 次访问，就抓取了这么多个页面' },
     asOf: 'July 2025',
     source: 'Tomé (2025), Cloudflare',
@@ -275,8 +275,8 @@ const COPY = {
       buildToggle: 'How this page was built',
       buildRows: [
         { k: 'Built with', v: 'Claude Code (Anthropic)' },
-        { k: 'Prompt iterations', v: '3' },
-        { k: 'Commits', v: '20' },
+        { k: 'Prompt iterations', v: '4' },
+        { k: 'Commits', v: '22' },
         { k: 'Decided by a person', v: 'the argument, the seven screens, every line on this page, and which evidence to trust' },
         { k: 'Build log', v: 'https://github.com/Miint-Sunny/the-cheapest-thing-S5leebIY' },
       ],
@@ -289,8 +289,8 @@ const COPY = {
       buildToggle: '这个页面是怎么做出来的',
       buildRows: [
         { k: '构建工具', v: 'Claude Code (Anthropic)' },
-        { k: 'prompt 迭代轮数', v: '3' },
-        { k: 'commit 数', v: '20' },
+        { k: 'prompt 迭代轮数', v: '4' },
+        { k: 'commit 数', v: '22' },
         { k: '由人决定的部分', v: '论点、七个屏幕、这个页面上的每一句话，以及该相信哪些证据' },
         { k: '构建记录', v: 'https://github.com/Miint-Sunny/the-cheapest-thing-S5leebIY' },
       ],
@@ -302,7 +302,7 @@ const COPY = {
   s6: {
     en: {
       madeBy: 'Made by',
-      madeByLines: ['[Name], Miint', 'NETS2000 Web Media', 'Curtin University, 2026'],
+      madeByLines: ['Zhang Jinghao (Miint)', 'NETS2000 Web Media', 'Curtin University, 2026'],
       sources: 'Sources',
       sourcesNote: 'All sources are readable in full at the links below. Statistics carry the date they were retrieved.',
       fonts: 'Set in Space Grotesk and JetBrains Mono, both under the SIL Open Font License.',
@@ -317,7 +317,7 @@ const COPY = {
     },
     zh: {
       madeBy: '作者',
-      madeByLines: ['[姓名], Miint', 'NETS2000 Web Media', '科廷大学，2026'],
+      madeByLines: ['张竞浩（Miint）', 'NETS2000 Web Media', '科廷大学，2026'],
       sources: '来源',
       sourcesNote: '以下来源均可通过链接读到全文。所有统计数字都标注了抓取日期。',
       fonts: '正文使用 Space Grotesk 与 JetBrains Mono，均遵循 SIL 开放字体许可。',
