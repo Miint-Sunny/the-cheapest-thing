@@ -93,37 +93,90 @@
 
   /* -------------------------------------------------------- crawl canvas */
 
-  function crawlCanvas() {
-    return root.querySelector('.crawl-field');
-  }
-
   function layoutCrawl() {
-    const canvas = crawlCanvas();
-    const w = canvas.parentNode.clientWidth;
+    const field = root.querySelector('.crawl-field');
+    const lock = root.querySelector('.crawl-lock');
+    const w = field.parentNode.clientWidth;
     const cell = w < 520 ? 2 : 3;
     const mark = cell - 1;
     const cols = Math.floor(w / cell);
     const rows = Math.ceil(MARKS / cols);
     const h = rows * cell;
     const dpr = Math.min(devicePixelRatio || 1, 2);
-    canvas.width = Math.round(w * dpr);
-    canvas.height = Math.round(h * dpr);
-    canvas.style.width = w + 'px';
-    canvas.style.height = h + 'px';
-    const g = canvas.getContext('2d');
+    [field, lock].forEach(function (c) {
+      c.width = Math.round(w * dpr);
+      c.height = Math.round(h * dpr);
+      c.style.width = w + 'px';
+      c.style.height = h + 'px';
+    });
+    const g = field.getContext('2d');
     g.scale(dpr, dpr);
-    return { g: g, cols: cols, cell: cell, mark: mark, w: w, h: h };
+    const gL = lock.getContext('2d');
+    gL.scale(dpr, dpr);
+    return { g: g, gL: gL, cols: cols, cell: cell, mark: mark, w: w, h: h };
   }
 
-  /* the locate beat: coordinate axes snap onto the one returned visit */
-  function drawCrosshair(L) {
-    const cx = (SIGNAL_AT % L.cols) * L.cell + L.mark / 2;
-    const cy = Math.floor(SIGNAL_AT / L.cols) * L.cell + L.mark / 2;
-    L.g.fillStyle = 'rgb(255 90 31 / 0.8)';
-    L.g.fillRect(0, cy, L.w, 1);
-    L.g.fillRect(cx, 0, 1, L.h);
-    L.g.fillStyle = '#FF5A1F';
-    L.g.fillRect(cx - 3, cy - 3, 6, 6);
+  function lockTarget(L) {
+    return {
+      cx: (SIGNAL_AT % L.cols) * L.cell + L.mark / 2,
+      cy: Math.floor(SIGNAL_AT / L.cols) * L.cell + L.mark / 2,
+    };
+  }
+
+  /* final state of the locate gesture: axes crossed on the returned visit */
+  function drawLockStatic(L) {
+    const t = lockTarget(L);
+    const g = L.gL;
+    g.clearRect(0, 0, L.w, L.h);
+    g.fillStyle = 'rgb(255 90 31 / 0.8)';
+    g.fillRect(0, t.cy, L.w, 1);
+    g.fillRect(t.cx, 0, 1, L.h);
+    g.fillStyle = '#FF5A1F';
+    g.fillRect(t.cx - 3, t.cy - 3, 6, 6);
+  }
+
+  /* the search: the horizontal axis sweeps down the field, the vertical one
+     follows a beat later, and they converge on the one orange mark — a
+     single fading ring marks the lock. Runs on its own canvas layer so the
+     38,066-mark field never repaints. */
+  function animateLock(L) {
+    const t = lockTarget(L);
+    const T_SWEEP = 750, V_DELAY = 220, PING = 650;
+    const LOCK_AT = V_DELAY + T_SWEEP;
+    const ease = function (p) { return 1 - Math.pow(1 - p, 3); };
+    const start = performance.now();
+    const g = L.gL;
+
+    function frame(now) {
+      const ms = now - start;
+      g.clearRect(0, 0, L.w, L.h);
+
+      const ph = Math.min(1, ms / T_SWEEP);
+      const pv = Math.max(0, Math.min(1, (ms - V_DELAY) / T_SWEEP));
+      const hy = ease(ph) * t.cy;
+      const vx = ease(pv) * t.cx;
+
+      g.fillStyle = 'rgb(255 90 31 / 0.8)';
+      g.fillRect(0, hy, L.w, 1);
+      if (ms >= V_DELAY) g.fillRect(vx, 0, 1, L.h);
+
+      if (ms >= LOCK_AT) {
+        g.fillStyle = '#FF5A1F';
+        g.fillRect(t.cx - 3, t.cy - 3, 6, 6);
+        const pr = Math.min(1, (ms - LOCK_AT) / PING);
+        if (pr < 1) {
+          g.strokeStyle = 'rgb(255 90 31 / ' + (0.5 * (1 - pr)).toFixed(3) + ')';
+          g.lineWidth = 1.5;
+          g.beginPath();
+          g.arc(t.cx, t.cy, 6 + 22 * ease(pr), 0, Math.PI * 2);
+          g.stroke();
+        }
+      }
+
+      if (ms < LOCK_AT + PING) requestAnimationFrame(frame);
+      else drawLockStatic(L);
+    }
+    requestAnimationFrame(frame);
   }
 
   function drawCrawl(progressive) {
@@ -144,7 +197,7 @@
     }
     if (!progressive) {
       chunk(MARKS);
-      drawCrosshair(L);
+      drawLockStatic(L);
       crawlDrawn = true;
       return;
     }
@@ -155,7 +208,7 @@
         requestAnimationFrame(step);
       } else {
         crawlDrawn = true;
-        setTimeout(function () { drawCrosshair(L); }, 260);
+        setTimeout(function () { animateLock(L); }, 300);
       }
     })();
   }

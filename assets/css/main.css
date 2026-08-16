@@ -743,7 +743,9 @@ img, svg, canvas { display: block; max-width: 100%; }
 
 .crawl { margin-block: 2.2rem; max-width: 46rem; }
 .crawl-lead { font-size: 1.15rem; font-weight: 700; margin-bottom: 0.9rem; }
-.crawl-field { width: 100%; margin-bottom: 0.7rem; }
+.crawl-stage { position: relative; margin-bottom: 0.7rem; }
+.crawl-field { width: 100%; }
+.crawl-lock { position: absolute; left: 0; top: 0; pointer-events: none; }
 .crawl-caption { font-size: var(--fs-small); color: var(--tx2); margin-bottom: 1rem; max-width: var(--measure); }
 .crawl-figure .fig-value { font-size: clamp(1.9rem, 1.5rem + 2.4vw, 3.2rem); }
 
